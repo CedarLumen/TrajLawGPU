@@ -1,0 +1,7 @@
+device NVIDIA GeForce RTX 5060 Laptop GPU   STEPS=1500   every=4
+numpy 1 truth                     0.59s   0.39 ms/step  utilization   3.3%  process peak memory 1175 MiB
+GPU eager 1 truth                 2.75s   1.83 ms/step  utilization  17.6%  process peak memory 1207 MiB
+GPU eager 6 truths (batched)      8.26s   5.51 ms/step  utilization  19.6%  process peak memory 1227 MiB
+GPU graph 1 truth                 0.33s   0.22 ms/step  utilization  14.0%  process peak memory 1224 MiB
+GPU graph 6 truths (batched)      1.02s   0.68 ms/step  utilization  54.8%  process peak memory 1261 MiB
+torch CPU 1 truth                 1.46s   0.97 ms/step  utilization  24.0%  process peak memory 1261 MiB

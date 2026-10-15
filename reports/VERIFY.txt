@@ -1,0 +1,52 @@
+== 1 rerun each script (really executed: exit code and wall clock)
+  script exit     wall       report
+  e0     -        (not run)  D:\FAST\TrajLawGPU\reports\E0.txt []
+  e1     -        (not run)  D:\FAST\TrajLawGPU\reports\E1.txt []
+  e2     -        (not run)  D:\FAST\TrajLawGPU\reports\E2.txt []
+  e4     -        (not run)  D:\FAST\TrajLawGPU\reports\E4.txt []
+  e5     -        (not run)  D:\FAST\TrajLawGPU\reports\E5.txt []
+  e6     -        (not run)  D:\FAST\TrajLawGPU\reports\E6.txt []
+
+== 2 numerical comparison against the old reports (numeric tokens from both sides, compared as sets)
+  report     old tokens   new tokens   shared       only old / only new
+  E0         210          102          73           0.4 1.07848e-14 1.11565e-09 1.22474e-12 1.68979e-13 1.77636e-15 / .0 1.03e-15 1.11e-16 1.72e-15 1.78e-15 14.4
+  E1         241          278          121          - / -0.07 .0 .6 0.00025 16.0 2.14
+  E2         263          266          160          - / 3.2 7.55
+  E5         29           30           19           - / 6.3
+  E6         49           55           17           -0.1479 -0.15 -0.1571 0.000758 0.003424 0.01622 / +0.1476 +0.1559 +0.1569 +0.16 -0.1476 -0.1569
+
+== 3 comment and file-header scan
+  file           lines      comment lines header block
+  tl/__init__.py 3          0          -
+  tl/bases.py    75         0          -
+  tl/est.py      49         0          -
+  tl/fit.py      98         0          -
+  tl/forces.py   278        0          -
+  tl/obs.py      85         0          -
+  tl/rt.py       29         0          -
+  tl/scenes.py   83         0          -
+  tl/sim.py      145        0          -
+  tl/thermo.py   100        0          yes
+  exp/e0.py      137        0          -
+  exp/e1.py      267        3          yes
+  exp/e2.py      185        0          yes
+  exp/e3.py      276        6          yes
+  exp/e4.py      142        0          yes
+  exp/e5.py      117        1          -
+  exp/e6.py      160        4          -
+  exp/e7_argon.py 290        0          yes
+  tests/_mem_child.py 52         0          yes
+  tests/probe_hard.py 113        0          yes
+  tests/report_aux.py 73         0          yes
+  tests/test_bug_evidence.py 232        0          yes
+  tests/test_lj_pbc.py 108        0          yes
+  tests/test_parity.py 158        0          yes
+  tests/test_sentinels.py 151        0          yes
+  tests/verify_all.py 95         0          yes
+  tests/verify_docx.py 53         0          yes
+  tests/verify_pdf.py 29         0          yes
+  bench/graph.py 89         0          yes
+  bench/step.py  91         0          yes
+
+== 4 peak GPU memory (torch side, this process)
+  See the peak-memory line at the end of each experiment report; E0/E4/E3 all print it.

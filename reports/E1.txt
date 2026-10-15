@@ -1,0 +1,111 @@
+device cuda   dtype torch.float64   numpy 2.4.6   torch 2.14.0+cu132
+config dt=0.00025s every=4 obs ΔT=0.001s
+
+pooled 60+60 two-body trajectories (one batched rk4 per pool): 2.1s   generic 90060   radial 90060
+============================================================================================================
+E1a angular identifiability   observation = analytic torques (isolates identifiability itself)
+    criterion = coefficient standard error se (force noise σ_a=1); se > 1 means unidentifiable (|true coefficient| = 1)
+============================================================================================================
+
+【generic configuration pool (60 trajectories, random initial relative velocity)】
+  samples 90060 ; r ∈ [0.004, 0.981] ; |v| ∈ [0.016, 1.717] ; |cos| median 0.578 ; max|v⊥| = 1.7
+  |cos|>=   kept     cond(A)   | R̂     rR̂    r²R̂   r³R̂   v∥R̂   v∥²R̂  v⊥R̂   v∥n̂   v⊥n̂   v⊥²R̂ 
+  --------------------------------------------------------------------------------------------------------
+  0         1.000    178       | 0.027  0.18   0.36   0.22   0.0062 0.0086 0.0053 0.0062 0.0053 0.0081
+                     column norm | 3e+02  1.7e+02 1.1e+02 87     1.6e+02 1.5e+02 1.9e+02 1.6e+02 1.9e+02 1.7e+02
+                     verdict   |                                                                      
+  0.5       0.580    168       | 0.033  0.22   0.44   0.27   0.0064 0.01   0.0092 0.0064 0.0091 0.018 
+                     column norm | 2.3e+02 1.2e+02 85     65     1.6e+02 1.5e+02 1.1e+02 1.6e+02 1.1e+02 78    
+                     verdict   |                                                                      
+  0.9       0.191    169       | 0.052  0.36   0.73   0.44   0.0094 0.016  0.036  0.0092 0.034  0.14  
+                     column norm | 1.3e+02 69     48     39     1.1e+02 1.2e+02 29     1.1e+02 29     11    
+                     verdict   |                                                                      
+  0.98      0.089    222       | 0.078  0.56   1.3    0.83   0.014  0.045  0.11   0.014  0.098  1.5   
+                     column norm | 90     48     33     27     74     84     10     74     10     2.1   
+                     verdict   |               !!!                                              !!!   
+  0.995     0.040    1.27e+03  | 0.14   1.4    4.1    3.7    0.029  0.094  0.77   0.027  0.46   18    
+                     column norm | 60     25     13     7.2    38     28     2.2    38     2.2    0.13  
+                     verdict   |        !!!    !!!    !!!                                       !!!   
+
+【exactly radial pool (central force + radial launch ⇒ v⊥ ≡ 0)】
+  samples 90060 ; r ∈ [0.000, 1.050] ; |v| ∈ [0.000, 1.610] ; |cos| median 1.000 ; max|v⊥| = 1.2e-10
+  |cos|>=   kept     cond(A)   | R̂     rR̂    r²R̂   r³R̂   v∥R̂   v∥²R̂  v⊥R̂   v∥n̂   v⊥n̂   v⊥²R̂ 
+  --------------------------------------------------------------------------------------------------------
+  0         1.000    1e+23     | 0.013  0.11   0.26   0.17   0.0044 0.0058 inf    0.0043 inf    inf   
+                     column norm | 3e+02  1.5e+02 1.1e+02 89     2.3e+02 2.6e+02 1.3e-10 2.3e+02 1.3e-10 1.4e-20
+                     verdict   |                                           !!!           !!!    !!!   
+  0.5       1.000    1e+23     | 0.013  0.11   0.26   0.17   0.0044 0.0058 inf    0.0043 inf    inf   
+                     column norm | 3e+02  1.5e+02 1.1e+02 89     2.3e+02 2.6e+02 1.3e-10 2.3e+02 1.3e-10 1.4e-20
+                     verdict   |                                           !!!           !!!    !!!   
+  0.9       1.000    1e+23     | 0.013  0.11   0.26   0.17   0.0044 0.0058 inf    0.0043 inf    inf   
+                     column norm | 3e+02  1.5e+02 1.1e+02 89     2.3e+02 2.6e+02 1.3e-10 2.3e+02 1.3e-10 1.4e-20
+                     verdict   |                                           !!!           !!!    !!!   
+  0.98      1.000    1e+23     | 0.013  0.11   0.26   0.17   0.0044 0.0058 inf    0.0043 inf    inf   
+                     column norm | 3e+02  1.5e+02 1.1e+02 89     2.3e+02 2.6e+02 1.3e-10 2.3e+02 1.3e-10 1.4e-20
+                     verdict   |                                           !!!           !!!    !!!   
+  0.995     1.000    1e+23     | 0.013  0.11   0.26   0.17   0.0044 0.0058 inf    0.0043 inf    inf   
+                     column norm | 3e+02  1.5e+02 1.1e+02 89     2.3e+02 2.6e+02 1.3e-10 2.3e+02 1.3e-10 1.4e-20
+                     verdict   |                                           !!!           !!!    !!!   
+
+expectation check (against the measurements; both lines have to be written down as they are):
+  - generic pool: as the |cos| threshold rises the first thing to break is the position
+    family (rR̂ / r²R̂ / r³R̂). The cause is not angular: energy conservation ties r and |v|
+    onto one curve (the energy shell), so high-order r polynomials become indistinguishable.
+    At |cos|>=0.995 cond(A) reaches 1.3e3.
+  - exactly radial (v⊥≡0): the three V⊥ columns have norm exactly 0 (1.3e-10 / 1.3e-10 / 1.4e-20),
+    se = inf and cond(A) = 1e23, i.e. genuinely rank-deficient and unidentifiable.
+  - key counterexample: in the same radial data v∥n̂ has se = 0.0043, the best of any basis;
+    the Magnus transverse part is ∝ v∥ and fully visible in head-on collisions.
+    => the initial guess "the transverse part is unidentifiable in head-on collisions" is falsified;
+       the corrected claim "what is unidentifiable is the basis ∝ v⊥" holds.
+
+============================================================================================================
+E1b sampling-range identifiability   restricting the sampled (r, |v|) range
+============================================================================================================
+
+  restriction                kept     cond(A)   | R̂     rR̂    r²R̂   r³R̂   v∥R̂   v∥²R̂  v⊥R̂   v∥n̂   v⊥n̂   v⊥²R̂ 
+  --------------------------------------------------------------------------------------------------------
+  none                       1.000    178       | 0.027  0.18   0.36   0.22   0.0062 0.0086 0.0053 0.0062 0.0053 0.0081
+  keep r <= median           0.500    861       | 0.05   0.61   2.2    2.5    0.0081 0.011  0.0078 0.0081 0.0076 0.012 
+  keep r >= median           0.500    1.32e+03  | 0.61   2.5    3.2    1.4    0.0096 0.014  0.0074 0.0095 0.0074 0.012 
+  keep |v| <= median         0.500    151       | 0.036  0.23   0.45   0.27   0.014  0.039  0.012  0.014  0.012  0.039 
+  keep |v| >= median         0.500    270       | 0.047  0.32   0.7    0.46   0.0069 0.012  0.0061 0.0069 0.006  0.012 
+  keep near head-on |cos|>=0.8 0.298    169       | 0.043  0.29   0.59   0.36   0.0077 0.013  0.02   0.0076 0.019  0.057 
+
+reading: once the samples are cut to half the range, the bases that live in the
+         unsampled range see se rise — that is what the unsampled range means.
+
+============================================================================================================
+E1c integration entanglement + second-derivative noise: the observation moves from
+    analytic torques to trajectory second differences. If the known terms can be
+    subtracted pointwise, axis 1 is just preprocessing; this measures the cost of
+    having position trajectories only.
+============================================================================================================
+
+  position noise σ obs ΔT      force residual ‖Δa‖/‖a‖ v⊥R̂ (true 0.07) v∥n̂ (true -0.07) v∥R̂ (true 0)   (before: a_known used the true velocity Vs, oracle mixed in)
+  ------------------------------------------------------------------------------------------------------------
+  0.0e+00      1.0e-03     3.089e-06        0.070           -0.070          -0.000
+  1.0e-06      1.0e-03     70.19            49.950          -0.070          -0.001
+  1.0e-05      1.0e-03     701.9            147.899         -0.111          -0.080
+  1.0e-04      1.0e-03     7019             37.008          -3.816          -7.178
+  1.0e-03      1.0e-03     7.019e+04        -37.084         -29.547         -56.997
+
+  position noise σ obs ΔT      force residual ‖Δa‖/‖a‖ v⊥R̂ (true 0.07) v∥n̂ (true -0.07) v∥R̂ (true 0)   (after: a_known uses the estimated velocity Vest)
+  ------------------------------------------------------------------------------------------------------------
+  0.0e+00      1.0e-03     3.089e-06        0.070           -0.070          -0.000
+  1.0e-06      1.0e-03     70.19            49.950          -0.070          -0.001
+  1.0e-05      1.0e-03     701.9            147.899         -0.111          -0.080
+  1.0e-04      1.0e-03     7019             37.008          -3.816          -7.178
+  1.0e-03      1.0e-03     7.019e+04        -37.084         -29.547         -56.997
+
+  max pointwise difference between the two a_known versions: 0  0  0  0  0
+
+reference: the truth is Magnus(κ=0.07), i.e. 0.07·(v⊥R̂) − 0.07·(v∥n̂) + 0·(v∥R̂).
+      At σ=0 the fit hits (0.070, −0.070, −0.000) exactly.
+      At σ=1e-6 the v⊥R̂ coefficient jumps from 0.070 to 49.95: position noise σ_x picked
+      up a factor 1/Δt² = 1e6, so the acceleration noise is ~1.0, already 14x the signal (~0.07).
+      => hard threshold of the trajectory route: σ_x/Δt² must stay far below the force
+         scale. This degeneracy is a separate matter from identifiability and has to be
+         reported separately.
+
+total 16.0s

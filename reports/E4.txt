@@ -1,0 +1,28 @@
+truth = magnus (velocity-dependent)   N=40  T=6s  σ_x=0  external = Trap(w2=0.12)
+estimator = local polynomial (m=4,p=4)   observed frames 6001
+
+1. collinearity diagnostic: the `rR̂` column of unk vs the x_i column of the self-field block
+    corr = 0.919643 ; relative norm left after projecting x_i onto rR̂ = 0.6635
+    identity Σ_j r R̂_ij = N·x_i − Σ_j x_j — the two are the same quantity.
+
+2. known-term ablation (external field pre-subtracted + contribution-thresholded STLSQ)
+  known level regime rows      pair-sum residual pairwise law error degeneracy ratio
+  ------------------------------------------------------------------------------
+  A0    full   29920     0.09921          7.96             1.000     
+  A0    mid    10238     0.1073           10.26            1.288     
+  A0    hard   2534      0.07182          8.547            1.074     
+  A1    full   29920     1.301e-06        1.386e-09        1.000     
+  A1    mid    10238     3.981e-06        1.453e-08        10.481    
+  A1    hard   2534      1.181e-14        3.918e-16        0.000     
+  A2    full   29920     2.125e-06        3.988e-09        1.000     
+  A2    mid    10238     5.933e-06        2.894e-08        7.257     
+  A2    hard   2534      1.896e-14        6.621e-16        0.000     
+
+criterion check (scaffold hypothesis: the gain from the bond graph should grow as observations thin out)
+  regime full : A0 7.96 -> A1 1.386e-09 -> A2 3.988e-09    bond-graph gain 5.74e+09 x ; extra gain from parameters 0.348 x
+  regime mid  : A0 10.26 -> A1 1.453e-08 -> A2 2.894e-08    bond-graph gain 7.06e+08 x ; extra gain from parameters 0.502 x
+  regime hard : A0 8.547 -> A1 3.918e-16 -> A2 6.621e-16    bond-graph gain 2.18e+16 x ; extra gain from parameters 0.592 x
+
+3. old-criterion reference (external field not subtracted from the target, A1/full only):
+    old criterion 0.0008685 -> after pre-subtracting the field 1.386e-09    field leakage 100.0%
+    peak GPU memory 0.583 GB (torch side)

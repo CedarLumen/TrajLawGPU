@@ -1,0 +1,108 @@
+
+======================================================================================
+BUG 1  KRR coefficient mapping misaligned (in both e3_main.py and e3b_krr_sweep.py)
+======================================================================================
+The design columns run (rh_0, n_0, rh_1, n_1, ...): column 2k is rh_k and column 2k+1 is n_k.
+The old script rebuilt the pair force as c[k]*P_k*rh + c[K+k]*P_k*n, which does not match that order.
+same coefficient vector c (K=120, h²=0.4):
+  taking (2k, 2k+1) as the column order: reference pair force, law error NMSE = 0.0002116
+  taking (k, K+k) as the old code did: relative force difference 2.771, law error NMSE = 7.672
+  => the old convention is 36251.5 x worse than the correct one. The KRR column of E3/E3b is void.
+
+======================================================================================
+BUG 2  the sweep selected on the metric it later reports (e3_main.py)
+======================================================================================
+Old code: `if best is None or c1 < best[1]`, where c1 is the covered-region law error — selecting on the reported metric.
+Sweeping once per criterion to see whether they pick the same cell:
+    K=120   h²=0.12   in-sample NMSE 0.0004102   covered law error 0.01668
+    K=120   h²=0.4    in-sample NMSE 1.576e-05   covered law error 0.0002116
+    K=120   h²=1      in-sample NMSE 1.299e-05   covered law error 6.541e-05
+    K=600   h²=0.12   in-sample NMSE 1.354e-05   covered law error 0.0005575
+    K=600   h²=0.4    in-sample NMSE 1.142e-05   covered law error 4.935e-05
+    K=600   h²=1      in-sample NMSE 1.212e-05   covered law error 3.652e-05
+  by in-sample NMSE -> K=600 h²=0.4
+  by covered law error -> K=600 h²=1
+  => the two differ, so the old code did select on the reported metric
+
+======================================================================================
+BUG 3  memory: the old version materialised the whole palette at once
+======================================================================================
+In old e3_main.krr_build, `((Un[:,None,:]-cen[None,:,:])**2).sum(-1)` has len(Un)×K×3 elements.
+training pair configurations in this mid-regime run (measured) = 585577
+    K=200 -> 585577×200×3×8B = 2.62 GB (single allocation)
+    K=600 -> 585577×600×3×8B = 7.85 GB (single allocation)
+measured (peak working-set increase of a child process on synthetic points of the same size):
+  points   K        old          new (30k subsample)
+  585577   60       1608.39 MB / 0.9s 83.53 MB / 0.4s
+  585577   120      3216.73 MB / 2.0s 165.94 MB / 0.9s
+  585577   200      5360.58 MB / 3.6s 275.81 MB / 1.5s
+  => the old version grows linearly with K; the new one subsamples and is independent of K. Linear extrapolation to K=600 = 7.9 GB.
+
+======================================================================================
+BUG 4  sum_design recomputed frame for every column — slower, but the absolute cost is tiny
+======================================================================================
+10 columns, 187 frames: frame computed once 0.0110s   recomputed per column 0.0040s   ratio 0.36
+=> a few times slower, but the absolute cost is milliseconds; not a performance concern and not counted as a defect.
+  (the 0.7x measured without sync is bogus: the GPU is asynchronous, so unsynced timing measures dispatch.)
+
+======================================================================================
+BUG 5  numbers from the report hard-coded into the code
+======================================================================================
+    e3_main.py:375  'MLP（已收敛，loss 5.7e-5 vs 方差 1.19）'))
+    This line never changes on a rerun, violating the rule that derived quantities must be computed.
+
+======================================================================================
+BUG 6  E6 and T.rk4 disagree on the frame index
+======================================================================================
+    T.rk4  takes i ∈ [0, 4, 8, 12, 16, 20]
+    e6     takes i ∈ [1, 5, 9, 13, 17, 21]   (in rk4_total, i starts at 1 and steps by every)
+    one integration step apart = 0.00025 s
+
+======================================================================================
+BUG 7  a tautology posing as an assertion
+======================================================================================
+    Old e0_pairsim.py: res['E0.4 NMSE(a,a)'] = mean((a-a)**2)/mean(a**2) is identically 0 and carries no information.
+    In the old e6 the pair-sum residual column was written separately from the verdict block, and numbers not from that column once appeared in the verdict.
+
+======================================================================================
+BUG 10  E6 matched the triplet force to the residual along the wrong axis (only flips the sign, but the reported numbers are wrong)
+======================================================================================
+    Old e6: f3_true[j] = f3(Xd[t]) broadcasts the per-particle force (N,d) onto axis 1 (columns) of (N,N,d),
+    while the residual resid[t,i,j] is the pair force on i from j, which belongs on rows (i).
+    The pair residual is antisymmetric in (i,j) (f_ij = −f_ji), so column matching = row matching negated:
+      old report cosine  −0.1559 / −0.1569 / −0.1476
+      correct matching  +0.1559 / +0.1569 / +0.1476
+    New exp/e6.py prints both; measured max |cos_row| − |cos_col| = 0 (see reports/E6.txt).
+    => the conclusion stands (|cos|≈0.15 < 0.7, condition B still fails and the claim stays in the appendix), but the sign has to be corrected when citing.
+
+======================================================================================
+BUG 8  the old report's conclusion contradicts its own table
+======================================================================================
+    Old E3_report.txt table: AFR-sym 0.87 / KRR 0.12 / NN 4.76 (degeneracy ratio).
+    The summary right after says "numerical baselines degenerate 0.1 x (KRR 0.1, NN 4.8); the symbolic form 0.87 x."
+    The next sentence says "outside the sampled configuration region the numerical error rises several-fold while the symbolic form barely moves."
+    => KRR's 0.12 is a decrease and the symbolic 0.87 is a decrease too, so both sentences contradict the table;
+       and the crossing of the two curves that C1 requires was never checked in that report.
+
+======================================================================================
+BUG 9  the degeneracy ratio is undecidable in this setting (the direction flips after the fix)
+======================================================================================
+    Re-measured after fixing the KRR mapping (exp/e3.py):
+      AFR-sym   covered 4.672e-09   uncovered 4.402e-08   ratio 9.42
+      KRR-pair  covered 3.848e-05   uncovered 2.063e-04   ratio 5.36
+      NN-pair   covered 1.474e-03   uncovered 5.547e-03   ratio 3.76
+      KRR(old map) covered 3.739     uncovered 3.018      ratio 0.81
+    => when both quantities sit at rounding level (1e-9/1e-8) the ratio is noise: the symbolic 9.42 and the old 0.87
+      are both quotients of machine-precision numbers. Judging C1 by the degeneracy ratio neither holds nor fails here —
+      the criterion has to change (e.g. absolute error in the uncovered region < 1e-6), and separately explain why the symbolic form
+      already reaches rounding level in the covered region (the basis contains the true family).
+    The old KRR uncovered error of exactly 1.000 is another fingerprint: the local kernel has no support outside the training range,
+      so the prediction is ≈0 and the NMSE is exactly the 1 of always predicting zero.
+
+======================================================================================
+A defect of the same kind that the gates caught in my own new code (kept as a positive example)
+======================================================================================
+    The first CUDA Graph path in tl/sim.py stored a frame every integration step, while every=4 wants one every 4 steps.
+    Symptom: E0's |x|max went from 1.00984 to 0.857619 and every other metric was off.
+    How it was caught: comparing old numpy / new eager / new graph one by one over every ∈ {1,4,5,32,64}.
+    After the fix the three agree to ≤ 2.8e-16 (see tests/test_parity.py).

@@ -1,0 +1,15 @@
+truth = magnus. Every regime, with all design-matrix and fit intermediates printed.
+A: target after pre-subtracting the external field (what E4 uses)   B: pre-subtracted true acceleration (control, no estimator bias)
+
+regime rows    rank   cond     selected |v| selected r bias RMS   A law error B law error
+full   29920   12     464      0.5121     0.4613     0.00162    1.386e-09  8.006e-29 
+        regime-A coefficients (truth v⊥R̂=+0.07, v∥n̂=−0.07, rest 0):R̂=-1.08e-05  rR̂=+6.61e-05  r²R̂=-0.000109  r³R̂=+5.21e-05  v⊥R̂=+0.07  v∥n̂=-0.07
+mid    10238   12     522      0.4929     0.2242     0.00266    1.453e-08  1.238e-28 
+        regime-A coefficients (truth v⊥R̂=+0.07, v∥n̂=−0.07, rest 0):R̂=-2.62e-05  rR̂=+0.00021  r²R̂=-0.000429  r³R̂=+0.000247  v⊥R̂=+0.07  v∥n̂=-0.07
+hard   2534    12     549      0.535      0.2134     1.65e-07   3.918e-16  1.61e-29  
+        regime-A coefficients (truth v⊥R̂=+0.07, v∥n̂=−0.07, rest 0):v⊥R̂=+0.07  v∥n̂=-0.07
+
+control: the same three regimes with only the unknown-term basis (no bond block)
+  full   rows 29920   cond 443        law error under the true target 8.319e-31
+  mid    rows 10238   cond 507        law error under the true target 1.107e-31
+  hard   rows 2534    cond 506        law error under the true target 5.514e-31

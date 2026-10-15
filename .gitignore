@@ -1,0 +1,32 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+
+# ---- 本仓库只公开实验代码与报告 ----
+# 公开：tl/（exp 依赖的核心库）、exp/（实验脚本）、tests/（检验脚本）、
+#       bench/（性能测量）、reports/（脚本自写的原始报告）、README.md
+# 其余一律不公开：论文生产链路（paper/）、写作素材与检索记录（docs/）、
+# 稿件维护脚本（tools/）、以及根目录的内部文档
+paper/
+docs/
+tools/
+API.md
+说明.md
+
+# ---- 手稿工具（属于写作链路而非实验，不公开）----
+tests/check_paper_numbers.py
+tests/verify_docx.py
+tests/verify_pdf.py
+
+# ---- 手稿及其图（不进仓库）----
+paper/*.md
+paper/*.docx
+paper/*.pdf
+paper/~$*
+paper/figs*/
+
+# ---- 临时脚本 ----
+/_*.py
+*.tmp

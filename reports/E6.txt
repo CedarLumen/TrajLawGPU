@@ -1,0 +1,42 @@
+truth = magnus + triplet term λ3·Σφ(r_ij)φ(r_ik)φ(r_jk),  φ(s)=exp(−s/0.15)
+criteria (pre-registered): λ3=0 should give ≲1e-6; λ3>0 should match the triplet share and give a residual cosine ≳0.7
+
+calibration: per-particle RMS of the unknown term = 1.504   triplet per-particle RMS vs λ3:
+    λ3=0.000  RMS(f3) = 0           -> 0.0% of the unknown term
+    λ3=0.008  RMS(f3) = 0.1624      -> 10.8% of the unknown term
+    λ3=0.020  RMS(f3) = 0.406       -> 27.0% of the unknown term
+    λ3=0.050  RMS(f3) = 1.015       -> 67.5% of the unknown term
+
+4 values of λ3 in one batched integration: 6001 frames x 4, 9.4s
+
+λ3      triplet share of unknown force pair-sum residual pairwise law error residual / floor cosine with true triplet force
+--------------------------------------------------------------------------------------------------------
+0.000   0 (baseline)   5.933e-06        2.894e-08        1.00         +0.0000
+0.008   165.6%         0.0007574        0.06775          2.34e+06     +0.1559
+        (matching the same residual along columns is the old convention, cosine -0.1559 — opposite sign to the row above, see the verdict section)
+0.020   365.8%         0.00343          0.3273           1.13e+07     +0.1569
+        (matching the same residual along columns is the old convention, cosine -0.1569 — opposite sign to the row above, see the verdict section)
+0.050   697.3%         0.01644          1.407            4.86e+07     +0.1476
+        (matching the same residual along columns is the old convention, cosine -0.1476 — opposite sign to the row above, see the verdict section)
+
+========================================================================================================
+verdict (against the pre-registered criteria; the two conditions are reported separately, never merged into one sentence)
+========================================================================================================
+  condition A (power): λ3>0 law error / λ3=0 floor > 1e4
+  condition B (specificity): cosine between the residual and the true triplet force > 0.7
+  λ3=0 floor = 2.894e-08 (pre-registered: ≲1e-6 -> met)
+  pairing check: max |cosine| difference between the two pairings (residual rows vs columns against the triplet force) = 0
+    The pair residual is antisymmetric in (i,j) (f_ij = −f_ji), so column pairing is exactly row
+    pairing negated: same angle, opposite sign. The −0.15 in the old report is the column pairing;
+    row pairing (correct) gives +0.1476.
+
+  λ3=0.008  triplet share 165.6    % law error 0.06775    (2.34e+06 x floor) cosine +0.1559  A:pass B:FAIL
+  λ3=0.020  triplet share 365.8    % law error 0.3273     (1.13e+07 x floor) cosine +0.1569  A:pass B:FAIL
+  λ3=0.050  triplet share 697.3    % law error 1.407      (4.86e+07 x floor) cosine +0.1476  A:pass B:FAIL
+
+  => condition A (power): holds — the residual is orders of magnitude above the floor, so the test has power
+  => condition B (specificity): does NOT hold — the residual does not align with the true triplet force, so it cannot be called the triplet term
+
+  Only A passes => the conclusion has to stay narrow: the irreducible triplet term can be detected (residual clearly above the floor),
+  but the residual cannot be identified with the triplet term (direction does not align, cosine +0.16).
+  Per the pre-registration this claim drops to an appendix, and the failed specificity criterion must be stated.

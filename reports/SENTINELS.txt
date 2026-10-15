@@ -1,0 +1,44 @@
+== 1 Newton's third law f(-R,-V) = -f(R,V)  (must be exactly 0)
+newton3 bond                                 0                      ok       == 0
+newton3 coulomb                              0                      ok       == 0
+newton3 yukawa                               0                      ok       == 0
+newton3 quartic                              0                      ok       == 0
+newton3 drag                                 0                      ok       == 0
+newton3 vlong                                0                      ok       == 0
+newton3 magnus                               0                      ok       == 0
+
+== 2 force = -∇U (position-dependent truths, finite differences)
+force=-gradU bond                            1.383e-10              ok       < 1e-9
+force=-gradU coulomb                         1.901e-10              ok       < 1e-9
+force=-gradU yukawa                          1.028e-10              ok       < 1e-9
+force=-gradU quartic                         9.178e-11              ok       < 1e-9
+
+== 3 RK4 order / energy drift (conservative truths)
+RK4 order                                    4.003                  ok       ~4
+relative total-energy drift                  3.864e-10              ok       < 1e-8
+
+== 4 design row-order sentinel: the v⊥ family must be exactly 0 on radial data
+v⊥ column norm share with the correct row order 5.869e-18              ok       <1e-10 (the column should be ≈0)
+same column share with the transpose forgotten 0.1844                 ok       >1e-3 (= the reshape trap)
+
+== 5 exact hit: the true family is in the basis and the target is the truth, so the residual reaches machine precision
+exact hit, relative residual                 2.355e-15              ok       <1e-12
+κ(v⊥R̂) hit                                  2.359e-16              ok       =0.07
+
+== 6 the STLSQ threshold must be scale-invariant: a large block must not move the small coefficients
+κ(v⊥R̂) after adding the block               0                      ok       0.070000
+coefficient difference before/after the block 1.372e-15              ok       <1e-10
+block zeroed once the threshold is raised    0.07                   ok       >0
+
+== 7 KRR coefficient mapping: column order (2k, 2k+1) vs the old (k, K+k)
+relative force difference between the two mappings (should be clearly >0) 33.08                  ok       >1e-2 = the old convention really is misaligned
+     In old e3_main/e3b, design alternates (rh,n) while predict takes (k,K+k);
+     b_old above is that convention and b_new follows the column order. Difference 33.1
+
+== 8 CPU / CUDA agreement (same expression on both devices)
+accel cpu↔cuda                               1.11e-16               ok       <1e-14
+
+== 9 the grid must come from an independent reference (coverage must not be identically 1)
+mid-regime grid coverage                     0.3914                 ok       must not be ~1
+
+BAD: 0 []

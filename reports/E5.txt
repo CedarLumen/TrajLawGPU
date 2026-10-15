@@ -1,0 +1,27 @@
+========================================================================================================
+E5 migration of spurious laws under velocity dependence    N=40  T=6s  obs Δt=1ms  σ_x=0  regime=mid
+========================================================================================================
+4 ensembles in one batched integration: 24001 frames x 4, 6.3s
+
+[truth = magnus (velocity-dependent)] |v|max of the two ensembles: s=1.0 -> 1.490, s=2.0 -> 2.340
+
+  ansatz       terms  pair-sum residual (in-sample) pairwise law error migration ‖Δf‖²/‖f‖² velocity coefficients (v⊥R̂ / v∥n̂)
+  ----------------------------------------------------------------------------------------------------
+  position ansatz 4      0.9479           1.422            0.4143           
+  velocity ansatz 10     2.974e-06        8.61e-12         7.181e-09        +0.0700 / -0.0700
+  reference: the true magnus is +0.070 / −0.070 on (v⊥R̂, v∥n̂); quartic_r has no velocity term.
+
+[truth = quartic_r (position-dependent (control))] |v|max of the two ensembles: s=1.0 -> 1.330, s=2.0 -> 2.439
+
+  ansatz       terms  pair-sum residual (in-sample) pairwise law error migration ‖Δf‖²/‖f‖² velocity coefficients (v⊥R̂ / v∥n̂)
+  ----------------------------------------------------------------------------------------------------
+  position ansatz 4      1.712e-06        3.849e-09        3.849e-09        
+  velocity ansatz 10     1.712e-06        3.849e-09        3.849e-09        +0.0000 / +0.0000
+  reference: the true magnus is +0.070 / −0.070 on (v⊥R̂, v∥n̂); quartic_r has no velocity term.
+
+========================================================================================================
+criterion check:
+  - velocity-dependent truth + position ansatz  -> migration should be well above 0 (the law drifts with the velocity distribution)
+  - velocity-dependent truth + velocity ansatz  -> migration ≈ 0, with velocity coefficients hitting ±0.070
+  - position-dependent truth (control)          -> both ansatz should give migration ≈ 0
+    If the control fails, this experiment is measuring something other than velocity dependence.

@@ -1,0 +1,20 @@
+visible rate and configuration coverage by regime (truth = magnus, N=40)
+  regime   visible trajectory points seen at least once grid coverage uncovered
+  full     1            40 of 40       0.778356     0.221644
+  mid      0.34181      37 of 40       0.446181     0.553819
+  hard     0.0845234    22 of 40       0.167245     0.832755
+
+per-truth RK4 convergence order (T=0.5, dt = 1e-3 / 5e-4 / 2.5e-4, reference dt=6.25e-5)
+  truth        err(dt=1e-3)   err(5e-4)      err(2.5e-4)    measured order
+  magnus       3.47927e-05    3.60485e-06    2.79669e-07    3.4795
+  drag         1.22474e-12    7.70217e-14    6.16174e-15    3.8175
+  vlong        2.70479e-12    1.68983e-13    1.07934e-14    3.9846
+  quartic_r    6.15928e-10    3.8872e-11     2.39606e-12    4.0030
+  yukawa       8.89537e-10    6.30959e-11    3.82522e-12    3.9307
+  coulomb      1.11565e-09    5.88316e-11    3.58741e-12    4.1404
+  -> range 3.4795 ~ 4.1404; worst of the six 3.4795
+
+total-energy drift of the conservative truths (same convention as E0.3, per truth)
+  quartic_r    3.86419e-10
+  yukawa       1.03055e-09
+  coulomb      1.06194e-10

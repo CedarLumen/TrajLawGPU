@@ -1,0 +1,59 @@
+truth = magnus (κ=0.07)    N=40  d=2  T=6s   position noise σ_x=0   obs Δt=0.001s
+dense 24001 frames -> observed 6001 frames   device cuda
+regime mid: visible trajectory points 0.342, seen at least once 37/40
+training rows (observed (t,i) pairs): 81628, fraction 0.340
+AFR-sym solve 0.06s   design matrix (59840, 10)   AᵀA size (10, 10)
+coefficients (truth: v⊥R̂ = +0.070, v∥n̂ = −0.070, rest 0):
+    rR̂    +0.00016
+    r²R̂   -0.00030
+    r³R̂   +0.00017
+    v⊥R̂   +0.07000
+    v∥n̂   -0.07000
+configuration space: 585577 training pairs / 4680780 fully observed; grid (16, 16, 16), uncovered bin fraction 0.227
+evaluation frames: 188 (shared by the three methods)
+
+method       covered law error NMSE uncovered law error NMSE rows (cov/uncov)
+----------------------------------------------------------------------------------
+AFR-sym      4.672e-09          4.402e-08          280038 / 13242
+
+NN-pair learning curve (step / train loss / val loss), 4000 steps / 60.7s / cuda
+    0:3.871/3.838   500:0.001283/0.001237   1000:0.0003588/0.0003504   1500:0.0002883/0.0002936   2000:0.0002819/0.0002802   2500:0.0001795/0.0001805   3000:0.000166/0.000164   3500:0.0001567/0.000157   3999:0.0001554/0.0001556
+    reference: variance of the residual itself = 1.192 (a loss stuck at this level means the net learned nothing)
+NN-pair      0.003025           0.01437           
+
+KRR-pair grid (chosen by in-sample NMSE; the old code used the covered law error, which is selecting on the reported metric)
+  K      h²       cond(AᵀA)   in-sample NMSE chosen by      covered law error uncovered law error
+  120    0.05     3.66e+26    0.009934                  0.2664           1.761           
+  120    0.12     2.46e+14    0.0004102                 0.01181          0.08705         
+  120    0.15     6.47e+12    0.0001707                 0.004603         0.03009         
+  120    0.4      5.56e+10    1.576e-05                 0.0001657        0.0008756       
+  120    1        7.57e+13    1.299e-05                 5.241e-05        0.0002531       
+  200    0.05     8.99e+29    0.003332                  0.1054           0.5119          
+  200    0.12     3.03e+16    9.701e-05                 0.003328         0.02017         
+  200    0.15     6.69e+14    4.448e-05                 0.001364         0.009976        
+  200    0.4      1.88e+13    1.245e-05                 8.678e-05        0.0004219       
+  200    1        5.44e+17    1.266e-05                 4.648e-05        0.000203        
+  600    0.05     1.94e+43    0.0002008                 0.01088          0.1341          
+  600    0.12     1.62e+23    1.354e-05                 0.0003799        0.003123        
+  600    0.15     5.55e+20    1.169e-05                 0.0001957        0.001407        
+  600    0.4      4.62e+21    1.142e-05                 3.848e-05        0.0002063       
+  600    1        1.08e+22    1.212e-05                 3.127e-05        0.0001124       
+  -> in-sample NMSE picks K = 600, h² = 0.4 (in-sample 1.142e-05)
+  -> the old criterion (covered law error) would pick K = 600, h² = 1 — different rows mean tuning leakage
+  sweep 39.2s (at K=600 the design is 14960×1200, built in blocks, no 2K (Ts,N,N) intermediates)
+KRR-pair     3.848e-05          0.0002063         
+KRR(old map) 3.739              3.018                <- the old coefficient mapping, same c
+
+peak GPU memory 1.32 GB (torch side)
+
+method         covered law error NMSE uncovered law error NMSE degeneracy uncov/cov representation
+----------------------------------------------------------------------------------------------------
+AFR-sym        4.672e-09            4.402e-08            9.42           global closed form (10 power/velocity terms)
+KRR-pair       3.848e-05            0.0002063            5.36           local radial basis (600 centers)
+NN-pair        0.003025             0.01437              4.75           MLP
+KRR(old map)   3.739                3.018                0.81           same coefficients, misaligned mapping
+
+C1 is judged by the degeneracy ratio (uncovered / covered), not by which method is lower in both regions:
+  numerical baselines degenerate 4.7 x (KRR 5.4, NN 4.7); the symbolic form 9.42 x.
+  Note: the AFR-sym basis happens to contain the true family, so it is machine-precision
+        in both regions — an upper bound from picking the right representation, not a general result.

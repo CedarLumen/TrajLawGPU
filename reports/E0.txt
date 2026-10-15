@@ -1,0 +1,91 @@
+device cuda   dtype torch.float64   numpy 2.4.6   torch 2.14.0+cu132
+config N=40 d=2 T=6s dt=0.00025s every=4 regime=mid
+
+E0.1  per truth
+  truth        Newton3 max|f(-R,-V)+f(R,V)| force split max|F-Fk-Fu|
+  magnus       0                      1.78e-15
+  drag         0                      7.11e-15
+  vlong        0                      1.78e-15
+  quartic_r    0                      3.55e-15
+  yukawa       0                      1.03e-15
+  coulomb      0                      1.72e-15
+
+E0.1b Mix / Composite batching: per-batch agreement (max|Δa|)
+  1.11e-16
+E0.2 position error dt=1e-3 / 5e-4 / 2.5e-4 (max over 6 truths)  3.47927e-05  3.60485e-06  2.79669e-07
+     measured order (RK4 expects ~4)  3.4795
+     batched integration: 6 truths x 6001 frames, 14.4s
+
+E0.3 per truth: total-energy drift / |v|max / |x|max
+  magnus       n/a (non-conservative terms) |v|max 1.49036  |x|max 1.00984
+  drag         n/a (non-conservative terms) |v|max 1.01431  |x|max 0.868838
+  vlong        n/a (non-conservative terms) |v|max 1.01431  |x|max 0.932019
+  quartic_r    3.86419e-10      |v|max 1.33016  |x|max 0.865254
+  yukawa       1.03055e-09      |v|max 1.28738  |x|max 1.14233
+  coulomb      1.06194e-10      |v|max 1.39728  |x|max 1.1285
+E0.3b gradient check max|F + grad U| / |F| (force = -grad U)
+  quartic_r    6.04845e-10
+  yukawa       6.04845e-10
+  coulomb      6.04845e-10
+
+E0.5 observation regime / configuration coverage / degeneracy gate
+
+==============================================================================
+E0  truth=magnus      (velocity-dependent)
+==============================================================================
+  visible trajectory points / particles seen at least once 0.342 / 37 of 40
+  (r, v∥, v⊥) grid coverage / outside          0.446181  0.553819
+  |cos(x,v)| median / oblique / head-on        0.72643  0.322101  0.134042
+  pairs used in sampling                       585577
+  frac_unknown (primary gate, target 0.25~0.6) 0.460992
+  |Fu|/|Fk| median (secondary diagnostic, not a gate) 0.213652
+
+==============================================================================
+E0  truth=drag        (velocity-dependent)
+==============================================================================
+  visible trajectory points / particles seen at least once 0.367 / 36 of 40
+  (r, v∥, v⊥) grid coverage / outside          0.161458  0.838542
+  |cos(x,v)| median / oblique / head-on        0.74268  0.297795  0.142163
+  pairs used in sampling                       719701
+  frac_unknown (primary gate, target 0.25~0.6) 0.386336
+  |Fu|/|Fk| median (secondary diagnostic, not a gate) 0.0640839
+
+==============================================================================
+E0  truth=vlong       (velocity-dependent)
+==============================================================================
+  visible trajectory points / particles seen at least once 0.367 / 35 of 40
+  (r, v∥, v⊥) grid coverage / outside          0.234954  0.765046
+  |cos(x,v)| median / oblique / head-on        0.641461  0.379821  0.113307
+  pairs used in sampling                       722636
+  frac_unknown (primary gate, target 0.25~0.6) 0.461226
+  |Fu|/|Fk| median (secondary diagnostic, not a gate) 0.0367021
+
+==============================================================================
+E0  truth=quartic_r   (position-dependent)
+==============================================================================
+  visible trajectory points / particles seen at least once 0.391 / 40 of 40
+  (r, v∥, v⊥) grid coverage / outside          0.479167  0.520833
+  |cos(x,v)| median / oblique / head-on        0.755496  0.299026  0.15755
+  pairs used in sampling                       854320
+  frac_unknown (primary gate, target 0.25~0.6) 0.363975
+  |Fu|/|Fk| median (secondary diagnostic, not a gate) 0.0546966
+
+==============================================================================
+E0  truth=yukawa      (position-dependent)
+==============================================================================
+  visible trajectory points / particles seen at least once 0.346 / 40 of 40
+  (r, v∥, v⊥) grid coverage / outside          0.45544  0.54456
+  |cos(x,v)| median / oblique / head-on        0.691482  0.343691  0.134876
+  pairs used in sampling                       632857
+  frac_unknown (primary gate, target 0.25~0.6) 0.442666
+  |Fu|/|Fk| median (secondary diagnostic, not a gate) 0.181375
+
+==============================================================================
+E0  truth=coulomb     (position-dependent)
+==============================================================================
+  visible trajectory points / particles seen at least once 0.372 / 40 of 40
+  (r, v∥, v⊥) grid coverage / outside          0.417824  0.582176
+  |cos(x,v)| median / oblique / head-on        0.700996  0.334374  0.136263
+  pairs used in sampling                       721510
+  frac_unknown (primary gate, target 0.25~0.6) 0.39657
+  |Fu|/|Fk| median (secondary diagnostic, not a gate) 0.207822

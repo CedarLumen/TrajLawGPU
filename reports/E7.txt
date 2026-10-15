@@ -1,0 +1,75 @@
+units: length Å  mass amu  energy K·kB  time 1.0967 ps
+system: 108 argon atoms, 3-D periodic boundary, box 18.1934 Å (minimum image, cutoff 9.10 Å)
+state point: T = 120.00 K (= 1.002 ε/kB), ρ* = 0.708 — mid liquid range, away from the triple point
+  mass density 1.1897 g/cm³ (the order of saturated liquid argon near 120 K)
+truth (used to generate the data only): LJ, ε/kB = 119.8 K, σ = 3.405 Å, m = 39.948 amu
+integration step 0.0022 ps; all positions recorded every 1 steps (Δt_obs = 2.2 fs); forces were never observed
+start: 3x3x3 FCC lattice (nearest neighbour 4.288 Å = 1.259 σ), Langevin melting from T* = 3
+    melt  1000/5000  T = 1072.29 K  RDF first peak 3.90 Å  g_max 5.62  g(7.5Å) 1.614
+    melt  2000/5000  T =  614.29 K  RDF first peak 3.83 Å  g_max 6.36  g(7.5Å) 1.419
+    melt  3000/5000  T =  476.98 K  RDF first peak 3.75 Å  g_max 8.78  g(7.5Å) 1.653
+    melt  4000/5000  T =  420.45 K  RDF first peak 3.68 Å  g_max 8.34  g(7.5Å) 1.750
+    melt  5000/5000  T =  397.98 K  RDF first peak 3.75 Å  g_max 8.16  g(7.5Å) 1.322
+    cool+equilibrate  2000/48000  T =  167.56 K  RDF first peak 3.75 Å  g_max 11.39  g(7.5Å) 1.341
+    cool+equilibrate  4000/48000  T =  121.43 K  RDF first peak 3.75 Å  g_max 10.55  g(7.5Å) 1.283
+    cool+equilibrate  6000/48000  T =  102.72 K  RDF first peak 3.75 Å  g_max 10.70  g(7.5Å) 1.341
+    cool+equilibrate  8000/48000  T =  114.17 K  RDF first peak 3.75 Å  g_max 10.78  g(7.5Å) 1.322
+    cool+equilibrate 10000/48000  T =  126.24 K  RDF first peak 3.75 Å  g_max 12.09  g(7.5Å) 1.711
+    cool+equilibrate 12000/48000  T =  118.15 K  RDF first peak 3.75 Å  g_max 11.78  g(7.5Å) 1.789
+    cool+equilibrate 14000/48000  T =  113.36 K  RDF first peak 3.75 Å  g_max 12.70  g(7.5Å) 1.497
+    cool+equilibrate 16000/48000  T =  122.61 K  RDF first peak 3.75 Å  g_max 11.16  g(7.5Å) 1.536
+    cool+equilibrate 18000/48000  T =  123.95 K  RDF first peak 3.75 Å  g_max 11.32  g(7.5Å) 1.555
+    cool+equilibrate 20000/48000  T =  124.29 K  RDF first peak 3.75 Å  g_max 12.32  g(7.5Å) 1.419
+    cool+equilibrate 22000/48000  T =  109.35 K  RDF first peak 3.75 Å  g_max 10.70  g(7.5Å) 1.478
+    cool+equilibrate 24000/48000  T =  114.19 K  RDF first peak 3.75 Å  g_max 12.16  g(7.5Å) 1.614
+    cool+equilibrate 26000/48000  T =  122.73 K  RDF first peak 3.75 Å  g_max 11.47  g(7.5Å) 1.497
+    cool+equilibrate 28000/48000  T =  120.90 K  RDF first peak 3.75 Å  g_max 11.78  g(7.5Å) 1.594
+    cool+equilibrate 30000/48000  T =  134.71 K  RDF first peak 3.75 Å  g_max 12.09  g(7.5Å) 1.400
+    cool+equilibrate 32000/48000  T =  131.73 K  RDF first peak 3.75 Å  g_max 11.24  g(7.5Å) 1.750
+    cool+equilibrate 34000/48000  T =  115.98 K  RDF first peak 3.75 Å  g_max 11.39  g(7.5Å) 1.030
+    cool+equilibrate 36000/48000  T =  110.46 K  RDF first peak 3.75 Å  g_max 10.55  g(7.5Å) 1.341
+    cool+equilibrate 38000/48000  T =  135.96 K  RDF first peak 3.75 Å  g_max 11.62  g(7.5Å) 1.633
+    cool+equilibrate 40000/48000  T =  114.26 K  RDF first peak 3.75 Å  g_max 11.47  g(7.5Å) 1.380
+    cool+equilibrate 42000/48000  T =  124.43 K  RDF first peak 3.75 Å  g_max 11.09  g(7.5Å) 1.380
+    cool+equilibrate 44000/48000  T =  127.84 K  RDF first peak 3.75 Å  g_max 12.62  g(7.5Å) 1.536
+    cool+equilibrate 46000/48000  T =  113.34 K  RDF first peak 3.75 Å  g_max 9.93  g(7.5Å) 1.400
+    cool+equilibrate 48000/48000  T =  122.47 K  RDF first peak 3.75 Å  g_max 11.78  g(7.5Å) 1.478
+
+Langevin equilibration 53000 steps = 116.2 ps, 71.6s (NVT, γ = 0.5 /tu)
+
+production 30000 steps x 2.19 fs = 65.8 ps; 6000 frames kept after dropping 24001 steps, 162.3s
+  temperature 110.74 K (mean) ± 6.32 K; relative energy drift 0.0564
+  liquid/solid MSD test: at 26.3 ps 29.88 Å², at 52.6 ps 119.45 Å²; diffusion coefficient from the linear part D = 5.67×10⁻⁹ m²/s
+  final RDF: first peak 3.75 Å, g_max 11.78, g(7.5 Å) 1.478 (liquid: g_max ≈ 3 and g→1; crystal: larger g_max and g(7.5) off 1)
+
+evaluation frames 376; sampled r range 3.481 ~ 15.138 Å (median 8.919, minimum within 2.3σ)
+
+observation-interval sweep (same trajectory resampled at Δt_obs; basis B = {p=7, p=13})
+  Δt_obs/fs frames   rows    normalized cond pair-sum residual σ/Å      ε/kB       pairwise law error
+  2.2       24001    131868  130         8.612e-07   3.4050   119.785    1.486e-08
+  4.4       12001    133812  130         6.764e-06   3.4050   119.586    3.156e-06
+  8.8       6001     138348  130         0.0007398   3.4050   116.799    0.0006223
+  17.5      3001     138024  130         0.05226     3.4051   90.065     0.06136
+  -> best recovery: Δt_obs = 2.2 fs, σ = 3.4050 Å (+0.000%), ε/kB = 119.79 K (-0.012%)
+
+the generic 13-term basis (basis A) on the same setting, for reference:
+  normalized cond 3.49e+16 (basis B 130); pair-sum residual 8.55e-07 (basis B 8.612e-07); pairwise law error 1.853e-08 (basis B 1.486e-08)
+  potential curve max|ΔU|/max|U|: basis A 0.002302 (U_min = -119.825 K·kB), basis B 0.0001222 (U_min = -119.766 K·kB); true U_min = -119.781
+
+using the true acceleration as the target (isolates estimator bias):
+  B pairwise law error 8.955e-29 (upper bound on fit accuracy)  σ = 3.4050 Å（-0.0000%）ε/kB = 119.80 K（+0.0000%）
+  A pairwise law error 2.37e-11 (upper bound on fit accuracy)
+
+macroscopic closure (recovered potential and true potential, same frame, same velocities)
+  true LJ      potential/atom -785.7875 K·kB   pressure    -220.9 bar
+  recovered (B) potential/atom -785.6913 K·kB   pressure    -220.8 bar
+  difference: potential/atom 0.09628 K·kB (0.0123%), pressure 0.0631 bar (0.0286%)
+
+second virial coefficient B2(T) (cm³/mol, integrated from U(r))
+  T/K      true LJ      recovered (B) rel. diff
+  100      -167.3620    -167.3261    0.000214
+  150      -80.9739     -80.9552     0.00023
+  200      -45.1526     -45.1402     0.000274
+  300      -13.6819     -13.6747     0.000525
+  400      0.3693       0.3742       0.0134
+  600      13.0318      13.0347      0.000222
